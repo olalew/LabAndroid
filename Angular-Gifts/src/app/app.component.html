@@ -1,0 +1,41 @@
+<nav class="navbar navbar-light navbar-expand-lg fixed-top" id="mainNav" style="background-color: #2367cc; z-index: 999!important;">
+  <div class="container"><a class="navbar-brand" href="#page-top" style="color: #418af5;"><strong>JS Scripting - Android</strong><br><em>Politechnika Śląska&nbsp;</em><br></a><button data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+          class="navbar-toggler navbar-toggler-right" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-align-justify"></i></button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ms-auto">
+              <li class="nav-item"><a class="nav-link">Prezenty</a></li>
+              <li class="nav-item"><a class="nav-link">O Nas</a></li>
+          </ul>
+      </div>
+  </div>
+</nav>
+
+<section id="style-transfer" style="background-color: rgb(18, 41, 83);">
+  <div class="container mt-4">
+      <div class="row mt-4">
+          <div class="col-12 col-sm-6 text-center mx-auto my-4">
+            <h2 class="text-white" style="margin-top: 2em">Dodaj Prezent</h2>
+            <p class="text-faded text-white mb-0">Dodaj prezent do listy</p>
+            <form>
+              <div class="form-group px-4">
+                <label for="exampleInputEmail1">Gift</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Gift Name" [(ngModel)]="giftInEdition" [ngModelOptions]="{standalone: true}">
+
+                <button class="btn btn-primary btn-block mt-2 px-4" style="display: block;width: 100%;" (click)="appendToList()">Add Gift</button>
+              </div>
+
+             
+            </form>
+          </div>
+          <div class="col-12 col-sm-6 col-6-md text-center mx-auto my-4 px-4">
+              <h2 class="text-white" style="margin-top: 2em">Lista Prezentów</h2>
+              <p class="text-faded mb-4 text-white">Lista już dodanych prezentów</p>
+              <ul class="list-group">
+                <li class="list-group-item" *ngFor="let gift of gifts">{{gift}}</li>
+              </ul>
+
+              <button class="btn btn-warning text-white btn-block mt-2 px-4" style="display: block;width: 100%;" (click)="generate()">Generate Card</button>
+          </div>
+      </div>
+  </div>
+</section>

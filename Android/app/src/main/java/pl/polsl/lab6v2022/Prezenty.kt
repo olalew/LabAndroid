@@ -22,7 +22,7 @@ class Prezenty : AppCompatActivity() {
 
         page.addJavascriptInterface(this, "activity")
 
-        page.loadUrl("file:///android_asset/Prezenty.html")
+        page.loadUrl("file:///android_asset/gifts/Prezenty.html")
 
         setContentView(page)
     }
