@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -8,25 +9,33 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
   public gifts: string[] = []
-  public giftInEdition: string = ""
 
-  constructor() {
-    this.readList();
-  }
+  public displayImage: boolean = false;
+  public path: SafeResourceUrl | undefined;
 
-  public appendToList() {
-    this.getActivity().appendGift(this.giftInEdition);
-    this.giftInEdition = "";
+  constructor(private _sanitizer: DomSanitizer, private zone: NgZone) {
+
+      (window as any).activity.onReceiveImage = (image: string) => {
+        console.log("image is");
+        console.log(image)
+  
+        this.zone.run(() => {
+          this.path = this._sanitizer.bypassSecurityTrustResourceUrl(image);
+          console.log(this.path)
+          this.displayImage = true
+        })
+    }
+
     this.readList();
   }
 
   private readList() {
-    let giftString = this.getActivity().getPresentList();
+    let giftString = this.getActivity().receiveList();
     this.gifts = JSON.parse(!!giftString ? giftString: "[]");
   }
-  
-  public generate() : void {
-    this.getActivity().generate()
+
+  public finish() {
+      this.getActivity().done();
   }
 
   private getActivity(): Activity {
@@ -35,18 +44,12 @@ export class AppComponent {
     }
 
     let activity = new Activity()
-    activity.appendGift = (gift) => {
-      this.gifts.push(gift);
-    };
-    activity.getPresentList = () => {
-      return JSON.stringify(this.gifts)
-    }
+    // setup methods
     return activity
   }
 }
 
 export class Activity {
-  public getPresentList: () => string | undefined = () => "";
-  public appendGift: (gift: string) => void = (gift: String) => {};
-  public generate: () => void = () => {}
+  public receiveList: () => string = () => "[]"
+  public done: () => void = () => {}
 }

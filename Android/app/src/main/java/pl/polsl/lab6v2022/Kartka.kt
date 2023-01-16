@@ -8,11 +8,13 @@ import android.os.Environment
 import android.os.PersistableBundle
 import android.provider.MediaStore
 import android.util.Base64.*
+import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.google.gson.GsonBuilder
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
@@ -42,7 +44,9 @@ class Kartka : AppCompatActivity() {
         page = WebView(this)
 
         page.settings.javaScriptEnabled=true
-        page.loadUrl("file:///android_asset/Kartka.html")
+        page.addJavascriptInterface(this, "activity")
+
+        page.loadUrl("file:///android_asset/card/Kartka.html")
 
         setContentView(page)
 
@@ -53,15 +57,17 @@ class Kartka : AppCompatActivity() {
         if (result?.resultCode != RESULT_OK)
             return
 
-        val imageBitmap = result.data?.extras?.get("data") as Bitmap ?: return
+        val imageBitmap = result.data?.extras?.get("data")
+
+        checkNotNull(imageBitmap) { return }
 
         val byteArrayOutputStream = ByteArrayOutputStream()
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        (imageBitmap as Bitmap).compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
         val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
 
-        val encoded: String = Base64.getEncoder().encodeToString(byteArray)
+        val encoded: String = "data:image/png;base64," + Base64.getEncoder().encodeToString(byteArray)
         val callback =
-            java.lang.String.format("javascript:window.imageManager(%s)", encoded)
+            java.lang.String.format("javascript:window.activity.onReceiveImage('%s')", encoded)
 
         runOnUiThread {
             page.loadUrl(callback)
@@ -70,21 +76,18 @@ class Kartka : AppCompatActivity() {
     }
 
     private fun launchTakeImage(): Unit {
-        val plik = File(
-            applicationContext
-                .getExternalFilesDir(
-                    Environment.DIRECTORY_PICTURES
-                )!!.path + "/zdjecie.jpg"
-        )
-
-        val sciezkaDoPliku: Uri = FileProvider.getUriForFile(this,
-            applicationContext.packageName + ".provider", plik);
-
         val intAparat = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intAparat.putExtra(MediaStore.EXTRA_OUTPUT, sciezkaDoPliku)
-        intAparat.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
         launcher.launch(intAparat)
+    }
+
+    @JavascriptInterface
+    fun receiveList(): String {
+        return GsonBuilder().create().toJson(this.presentList)
+    }
+
+    @JavascriptInterface
+    fun done(): Unit {
+        finish()
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
