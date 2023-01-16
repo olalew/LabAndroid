@@ -20,17 +20,18 @@
       width: 288px;
       height: 184px;">
       <div class="row mt-4">
-
         <div class="col-12" *ngIf="displayImage"> <!----> <!-- -->
           <img style="width: 40px; height: 40px; margin-left: 220px; margin-top: 10px;"
           [src]="path" alt="Red dot"
             />
         </div>
-
-        <!-- src="data:image/png;base64,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"-->
-
-        <div class="col-12">
+      </div>
+      <div class="row">
+        <div class="col-6">
           <p style="width: 100px; margin-bottom: 0;" *ngFor="let gift of gifts">{{gift}}</p>
+        </div>
+        <div class="col-6" style="margin-top: 35px; padding-left: 40px;">
+          <p style="font-weight: bold; font-size: 13px; line-height: 1.15;white-space: pre-line;">{{location}}</p>
         </div>
       </div>
   </div>

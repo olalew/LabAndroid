@@ -13,6 +13,8 @@ export class AppComponent {
   public displayImage: boolean = false;
   public path: SafeResourceUrl | undefined;
 
+  public location: string = ""
+
   constructor(private _sanitizer: DomSanitizer, private zone: NgZone) {
 
       (window as any).activity.onReceiveImage = (image: string) => {
@@ -25,6 +27,15 @@ export class AppComponent {
           this.displayImage = true
         })
     }
+
+    (window as any).activity.onReceiveLocation = (location: string) => {
+      console.log("location");
+      console.log(location)
+
+      this.zone.run(() => {
+        this.location = location
+      })
+  }
 
     this.readList();
   }
