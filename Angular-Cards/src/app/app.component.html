@@ -12,29 +12,33 @@
 
 <section >
   <div class="container" style="
-      background-image: url('./assets/kartka.jpg'); 
-      background-position: center; 
-      background-repeat: no-repeat; 
-      background-size: cover; 
-      margin-top: 100px;
-      width: 288px;
-      height: 184px;">
+      background-image: url('./assets/kartka.jpg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin-top: 110px;
+      width: 400px;
+      height: 250px;">
       <div class="row mt-4">
         <div class="col-12" *ngIf="displayImage"> <!----> <!-- -->
-          <img style="width: 40px; height: 40px; margin-left: 220px; margin-top: 10px;"
+          <img style="width: 48px; height: 48px; margin-left: 318px; margin-top: 18px;"
           [src]="path" alt="Red dot"
             />
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
-          <p style="width: 100px; margin-bottom: 0;" *ngFor="let gift of gifts">{{gift}}</p>
+        <div class="col-6 mt-4" >
+          <p style="width: 100px; margin-bottom: 0;" *ngFor="let gift of giftList">{{gift}}</p>
         </div>
-        <div class="col-6" style="margin-top: 35px; padding-left: 40px;">
-          <p style="font-weight: bold; font-size: 13px; line-height: 1.15;white-space: pre-line;">{{location}}</p>
+        <div class="col-6" style="margin-top: 52px; padding-left: 52px;">
+          <p style="font-weight: bold; font-size: 13px; line-height: 1.4;white-space: pre-line;">{{location}}</p>
         </div>
       </div>
   </div>
 
-  <button class="btn btn-warning text-white btn-block mt-2 px-4" style="display: block;width: 100%;" (click)="finish()">Finish</button>
+  <div class="row mt-4 px-4">
+    <div class="col-12 col-sm-12">
+      <button class="btn btn-warning text-white btn-block mt-2 px-4" style="display: block;width: 100%;" (click)="finish()">Finish</button>
+    </div>
+  </div>
 </section>

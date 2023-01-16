@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,15 +8,28 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
   public gifts: string[] = []
-  public giftInEdition: string = ""
+  public giftInEdition: string = "Default Gift"
 
-  constructor() {
+  constructor(private zone: NgZone) {
     this.readList();
+
+    (window as any).activity.onDefaultSet = (str: string) => {
+      console.log("location");
+      console.log(str)
+
+      this.zone.run(() => {
+        this.giftInEdition = str
+      })
+    }
+  }
+
+  ngOnInit(): void {
+    this.giftInEdition = this.getActivity().defaultGift()
   }
 
   public appendToList() {
     this.getActivity().appendGift(this.giftInEdition);
-    this.giftInEdition = "";
+    this.giftInEdition = "Default Gift";
     this.readList();
   }
 
@@ -24,7 +37,7 @@ export class AppComponent {
     let giftString = this.getActivity().getPresentList();
     this.gifts = JSON.parse(!!giftString ? giftString: "[]");
   }
-  
+
   public generate() : void {
     this.getActivity().generate()
   }
@@ -43,10 +56,28 @@ export class AppComponent {
     }
     return activity
   }
+
+  public askGoogle() {
+    this.getActivity().askGoogle()
+  }
 }
 
 export class Activity {
   public getPresentList: () => string | undefined = () => "";
   public appendGift: (gift: string) => void = (gift: String) => {};
   public generate: () => void = () => {}
+  public askGoogle: () => void = () => {}
+  public defaultGift: () => string = () => ""
 }
+
+/*
+
+      (window as any).activity.onReceiveLocation = (location: string) => {
+      console.log("location");
+      console.log(location)
+
+      this.zone.run(() => {
+        this.location = location
+      })
+
+*/

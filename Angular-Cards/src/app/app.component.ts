@@ -20,7 +20,7 @@ export class AppComponent {
       (window as any).activity.onReceiveImage = (image: string) => {
         console.log("image is");
         console.log(image)
-  
+
         this.zone.run(() => {
           this.path = this._sanitizer.bypassSecurityTrustResourceUrl(image);
           console.log(this.path)
@@ -40,9 +40,32 @@ export class AppComponent {
     this.readList();
   }
 
+  ngOnInit(): void {
+
+    let str = this.getActivity().getImageContent()
+    if (str.length > 0) {
+      this.path = this._sanitizer.bypassSecurityTrustResourceUrl(str);
+      console.log(this.path)
+      this.displayImage = true
+    }
+
+    this.location = this.getActivity().getLocation()
+  }
+
   private readList() {
     let giftString = this.getActivity().receiveList();
     this.gifts = JSON.parse(!!giftString ? giftString: "[]");
+  }
+
+  public get giftList(): string[] {
+    if (this.gifts.length > 3) {
+       let list = this.gifts.slice(0, 3)
+       console.log(list)
+       list.push("To many gifts ....")
+       return list
+    }
+
+    return this.gifts
   }
 
   public finish() {
@@ -63,4 +86,6 @@ export class AppComponent {
 export class Activity {
   public receiveList: () => string = () => "[]"
   public done: () => void = () => {}
+  public getImageContent: () => string = () => ""
+  public getLocation: () => string = () => ""
 }
